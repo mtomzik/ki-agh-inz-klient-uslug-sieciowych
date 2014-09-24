@@ -8,6 +8,7 @@ public class ApiCall {
 	private String url;
 	private Date callDate;
 	private ConnectionType connectionType;
+	private String data;
 
 	public String getUrl() {
 		return url;
@@ -31,5 +32,13 @@ public class ApiCall {
 
 	public void setConnectionType(ConnectionType connectionType) {
 		this.connectionType = connectionType;
+	}
+
+	public String getData() {
+		return data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
 	}
 }

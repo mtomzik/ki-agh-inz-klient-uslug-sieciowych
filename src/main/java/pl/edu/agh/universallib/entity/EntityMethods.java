@@ -25,30 +25,31 @@ public abstract class EntityMethods {
 	}
 
 	public DataHandler get(long id) throws EntityException {
-		ApiCall apiCall = prepareApiCall(getUrlPart() + separator + getIdPrefix(), ConnectionType.GET, id);
+		ApiCall apiCall = prepareApiCall(getUrlPart() + separator + getIdPrefix(), ConnectionType.GET, id, null);
 		return processApiCall(apiCall);
 	}
 
-	public DataHandler create(Entity e) {
-		ApiCall apiCall = prepareApiCall("/podcasts/create/", ConnectionType.POST, null);
+	public DataHandler create(String data) throws EntityException {
+		ApiCall apiCall = prepareApiCall(getUrlPart() + "/list/", ConnectionType.POST, null, data);
 		return processApiCall(apiCall);
 	}
 
 	public DataHandler update(Entity e, long id){
-		ApiCall apiCall = prepareApiCall("/podcasts/update/", ConnectionType.POST, id);
+		ApiCall apiCall = prepareApiCall("/podcasts/update/", ConnectionType.POST, id, null);
 		return processApiCall(apiCall);
 	}
 
 	public DataHandler delete(long id){
-		ApiCall apiCall = prepareApiCall("/podcasts/delete/", ConnectionType.DELETE, id);
+		ApiCall apiCall = prepareApiCall("/podcasts/delete/", ConnectionType.DELETE, id, null);
 		return processApiCall(apiCall);
 	}
 
-	private ApiCall prepareApiCall(String url, ConnectionType connectionType, Long id) {
+	private ApiCall prepareApiCall(String url, ConnectionType connectionType, Long id, String data) {
 		ApiCall apiCall = new ApiCall();
 		apiCall.setCallDate(new Date());
 		apiCall.setConnectionType(connectionType);
-		apiCall.setUrl(url + id);
+		apiCall.setUrl(url + (id == null ? "" : id));
+		apiCall.setData(data);
 		return apiCall;
 	}
 

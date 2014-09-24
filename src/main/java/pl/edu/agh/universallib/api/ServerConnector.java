@@ -15,6 +15,7 @@ import pl.edu.agh.universallib.api.exception.ProcessingException;
 import pl.edu.agh.universallib.api.handler.DataHandler;
 import pl.edu.agh.universallib.api.httpconnection.ConnectionType;
 import pl.edu.agh.universallib.api.httpconnection.HttpUrlConnectionGetSingleRecord;
+import pl.edu.agh.universallib.api.httpconnection.HttpUrlConnectionPostRecord;
 
 public class ServerConnector {
 
@@ -44,6 +45,14 @@ public class ServerConnector {
 				} catch (IOException e) {
 					e.printStackTrace();
 					throw new ProcessingException("IO Exception at processing call", e);
+				}
+			} else if (apiCall.getConnectionType().equals(ConnectionType.POST)){
+				HttpUrlConnectionPostRecord httpPost = new HttpUrlConnectionPostRecord();
+				try {
+					httpPost.postRecord(webServiceUrl + apiCall.getUrl(), apiCall.getData());
+				} catch (Exception e) {
+					e.printStackTrace();
+					throw new ProcessingException("Error POST with data " + apiCall.getData(), e);
 				}
 			}
 		} catch (ProcessingException e) {

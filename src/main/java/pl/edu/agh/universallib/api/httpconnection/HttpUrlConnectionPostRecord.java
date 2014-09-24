@@ -32,6 +32,6 @@ public class HttpUrlConnectionPostRecord {
 			response.append(inputLine);
 		}
 		in.close();
-
+		System.out.println(response.toString());
 	}
 }
