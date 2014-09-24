@@ -13,6 +13,9 @@ public abstract class EntityMethods {
 	private final String separator;
 	
 	public EntityMethods(String serviceUrl, WebServiceType webServiceType){
+		if (!serviceUrl.substring(serviceUrl.length() - 1 ).equals("/")){
+			serviceUrl = serviceUrl + "/"; 
+		}
 		this.serverConnector = new ServerConnector(serviceUrl);
 		this.separator = webServiceType.equals(WebServiceType.REST) ? "/" : "?";
 	}
@@ -22,7 +25,7 @@ public abstract class EntityMethods {
 	}
 
 	public DataHandler get(long id) throws EntityException {
-		ApiCall apiCall = prepareApiCall(separator + getUrlPart() + separator + getIdPrefix(), ConnectionType.GET, id);
+		ApiCall apiCall = prepareApiCall(getUrlPart() + separator + getIdPrefix(), ConnectionType.GET, id);
 		return processApiCall(apiCall);
 	}
 
@@ -71,6 +74,6 @@ public abstract class EntityMethods {
 	
 	private DataHandler processApiCall(ApiCall apiCall) {
 		serverConnector.process(apiCall);
-		return serverConnector.getApiCalls().get(apiCall);
+		return serverConnector.getDataHandler(apiCall);
 	}
 }

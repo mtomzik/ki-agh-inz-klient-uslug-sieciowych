@@ -37,21 +37,21 @@ public class ServerConnector {
 					apiCalls.put(apiCall, new DataHandler(map,null));
 				} catch (JsonParseException e) {
 					e.printStackTrace();
-					throw new ProcessingException(e);
+					throw new ProcessingException("Couldn't parse JSON", e);
 				} catch (JsonMappingException e) {
 					e.printStackTrace();
-					throw new ProcessingException(e);
+					throw new ProcessingException("Couldn't map JSON", e);
 				} catch (IOException e) {
 					e.printStackTrace();
-					throw new ProcessingException(e);
+					throw new ProcessingException("IO Exception at processing call", e);
 				}
 			}
 		} catch (ProcessingException e) {
 			apiCalls.put(apiCall, new DataHandler(null, e.getLocalizedMessage()));
 		}
 	}
-
-	public ConcurrentMap<ApiCall, DataHandler> getApiCalls() {
-		return apiCalls;
+	
+	public DataHandler getDataHandler(ApiCall apiCall){
+		return this.apiCalls.get(apiCall);
 	}
 }

@@ -15,7 +15,6 @@ public class HttpUrlConnectionGetSingleRecord {
 
 	public String getSingleData(String address) throws IOException {
 		URL page = new URL(address);
-//		
 		HttpURLConnection conn = (HttpURLConnection) page.openConnection();
 		conn.setRequestMethod("GET");
 		conn.connect();
