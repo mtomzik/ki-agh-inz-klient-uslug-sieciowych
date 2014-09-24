@@ -12,7 +12,7 @@ public class GenerateWebServiceUrlTest {
 	@Test
 	public void generateUrlTest() throws ProcessingException{
 		GenerateWebServiceUrl generator = new GenerateWebServiceUrl();
-		String result = generator.generateUrl(new Podcast(), new PodcastMethods());
+		String result = generator.generateUrl(new Podcast(), new PodcastMethods("http://localhost:8888/springrestdemo-0.0.1-SNAPSHOT"));
 		assertEquals("/podcasts/", result);
 	}
 }

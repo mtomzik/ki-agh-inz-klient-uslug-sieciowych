@@ -11,8 +11,5 @@ abstract public class Entity {
 	}
 
 	public Entity(){
-		this.fields = this.getClass().getFields();
-		for (Field f : this.getClass().getFields())
-			System.out.println(f.getName());
 	}
 }
