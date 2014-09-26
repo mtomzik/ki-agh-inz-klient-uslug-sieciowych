@@ -19,7 +19,7 @@ public class UpdateEntityTest {
 	
 	@Test
 	public void test() throws EntityException {
-		assertNull(pm.update("{\"title\":\"SomeTitleAfterThirdChange\"}", 1).getError());
+		assertNull(pm.update("{\"title\":\"SomeTitleAfterFourthChange\"}", 1).getError());
 	}
 
 }

@@ -19,6 +19,6 @@ public class GetEntityTest {
 	
 	@Test
 	public void getEntityTest() throws EntityException{
-		assertEquals("Quarks & Co - zum Mitnehmen", pm.get(1).getData().get("title"));
+		assertEquals("SomeTitle", pm.get(4).getData().get("title"));
 	}
 }

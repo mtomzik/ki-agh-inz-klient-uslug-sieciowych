@@ -19,7 +19,7 @@ public class DeleteEntityTest {
 	
 	@Test
 	public void test() throws EntityException {
-		assertNull(pm.delete(10).getError());
+		assertNull(pm.delete(11).getError());
 	}
 
 }
