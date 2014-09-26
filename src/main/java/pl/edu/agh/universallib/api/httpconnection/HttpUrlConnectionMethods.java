@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -16,19 +15,20 @@ public class HttpUrlConnectionMethods {
 		conn = getConnectionToUrl(address);
 		conn.setRequestMethod("GET");
 		conn.connect();
-		return getResponse(conn);
+		String response = getResponse(conn);
+		return response;
 	}
 
 	public static int postRecord(String address, String jsonString) throws IOException {
 		HttpURLConnection conn = null;
-		DataOutputStream wr = null;
+		DataOutputStream out = null;
 		try {
 			conn = getConnectionToUrl(address);
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json");
-			wr = new DataOutputStream(conn.getOutputStream());
-			wr.writeBytes(jsonString);
-			wr.flush();
+			out = new DataOutputStream(conn.getOutputStream());
+			out.writeBytes(jsonString);
+			out.flush();
 			return conn.getResponseCode();
 		} catch (ProtocolException e) {
 			e.printStackTrace();
@@ -36,30 +36,30 @@ public class HttpUrlConnectionMethods {
 			if (conn != null) {
 				conn.disconnect();
 			}
-			if (wr != null){
-				wr.close();
+			if (out != null){
+				out.close();
 			}
 		}
 		return -1;
 	}
 
 	public static int putRecord(String address, String contentToPut) throws IOException {
-		HttpURLConnection httpCon = null;
-		OutputStreamWriter out = null;
+		HttpURLConnection conn = null;
+		DataOutputStream out = null;
 		try {
-			httpCon = getConnectionToUrl(address);
-			httpCon.setRequestMethod("PUT");
-			httpCon.setRequestProperty("Content-Type", "application/json");
-			out = new OutputStreamWriter(
-					httpCon.getOutputStream());
-			out.write(contentToPut);
-			return httpCon.getResponseCode();
+			conn = getConnectionToUrl(address);
+			conn.setRequestMethod("PUT");
+			conn.setRequestProperty("Content-Type", "application/json");
+			out = new DataOutputStream(
+					conn.getOutputStream());
+			out.writeBytes(contentToPut);
+			return conn.getResponseCode();
 		} catch (ProtocolException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			if (httpCon != null) {
-				httpCon.disconnect();
+			if (conn != null) {
+				conn.disconnect();
 			}
 			if (out != null){
 				out.close();
@@ -69,17 +69,17 @@ public class HttpUrlConnectionMethods {
 	}
 
 	public static int deleteRecord(String address) {
-		HttpURLConnection httpCon = null;
+		HttpURLConnection conn = null;
 		try {
-			httpCon = getConnectionToUrl(address);
-			httpCon.setRequestMethod("DELETE");
-			return httpCon.getResponseCode();
+			conn = getConnectionToUrl(address);
+			conn.setRequestMethod("DELETE");
+			return conn.getResponseCode();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			if (httpCon != null) {
-				httpCon.disconnect();
+			if (conn != null) {
+				conn.disconnect();
 			}
 		}
 		return -1;

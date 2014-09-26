@@ -8,23 +8,20 @@ import org.junit.Test;
 import pl.edu.agh.universallib.entity.example.PodcastMethods;
 import pl.edu.agh.universallib.url.WebServiceType;
 
-public class DeleteEntityTest {
+public class DeleteAllEntitiesTest {
 
 	private PodcastMethods pm;
 
 	@Before
-	public void prepareEntity() throws EntityException {
+	public void prepareEntity() {
 		pm = new PodcastMethods(
 				"http://localhost:8888/springrestdemo-0.0.1-SNAPSHOT/",
 				WebServiceType.REST);
-		pm.deleteAll();
-		pm.create("{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\",\"insertionDate\":1389295270000}");
 	}
 
 	@Test
 	public void test() throws EntityException {
-		assertNull(pm.delete(1).getError());
-		assertNull(pm.get(1).getData());
+		assertNull(pm.deleteAll().getError());
 	}
 
 }

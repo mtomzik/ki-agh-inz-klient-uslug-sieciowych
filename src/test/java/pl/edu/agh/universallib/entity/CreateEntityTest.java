@@ -1,5 +1,6 @@
 package pl.edu.agh.universallib.entity;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
@@ -14,14 +15,19 @@ public class CreateEntityTest {
 	private PodcastMethods pm;
 
 	@Before
-	public void prepareEntity(){
-		pm = new PodcastMethods("http://localhost:8888/springrestdemo-0.0.1-SNAPSHOT/", WebServiceType.REST);
+	public void prepareEntity() throws EntityException {
+		pm = new PodcastMethods(
+				"http://localhost:8888/springrestdemo-0.0.1-SNAPSHOT/",
+				WebServiceType.REST);
+		pm.deleteAll();
 	}
-	
+
 	@Test
 	public void test() throws EntityException {
-		DataHandler handler = pm.create("{\"title\":\"SomeTitle11\",\"linkOnPodcastpedia\":\"http://goog33232le1.com\",\"feed\":\"http://go1o2332gleee.com\",\"description\":\"testDescription\",\"insertionDate\":1389295270000}");
+		DataHandler handler = pm
+				.create("{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\",\"insertionDate\":1389295270000}");
 		assertNull(handler.getError());
+		assertEquals("SomeTitle", pm.get(1).getData().get("title"));
 	}
 
 }
