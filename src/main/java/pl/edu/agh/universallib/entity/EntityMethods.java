@@ -30,7 +30,7 @@ public abstract class EntityMethods {
 	}
 
 	public DataHandler create(String data) throws EntityException {
-		ApiCall apiCall = prepareApiCall(getUrlPart() + "/list/", ConnectionType.POST, null, data);
+		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.POST, null, data);
 		return processApiCall(apiCall);
 	}
 

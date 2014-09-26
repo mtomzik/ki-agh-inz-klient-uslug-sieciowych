@@ -17,6 +17,7 @@ public class HttpUrlConnectionPostRecord {
 		URL url = new URL(address);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Content-Type", "application/json");
 		conn.setDoOutput(true);
 		DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
 		wr.writeBytes(parametersToPost);

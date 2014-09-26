@@ -50,6 +50,7 @@ public class ServerConnector {
 				HttpUrlConnectionPostRecord httpPost = new HttpUrlConnectionPostRecord();
 				try {
 					httpPost.postRecord(webServiceUrl + apiCall.getUrl(), apiCall.getData());
+					apiCalls.put(apiCall, new DataHandler(null, null));
 				} catch (Exception e) {
 					e.printStackTrace();
 					throw new ProcessingException("Error POST with data " + apiCall.getData(), e);

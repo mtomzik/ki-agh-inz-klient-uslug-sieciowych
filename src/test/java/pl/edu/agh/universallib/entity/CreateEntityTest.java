@@ -20,7 +20,7 @@ public class CreateEntityTest {
 	
 	@Test
 	public void test() throws EntityException {
-		DataHandler handler = pm.create("{\"create\":\"12344\",\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://google.com\",\"description\":\"testDescription\",\"insertionDate\":1389295270000}");
+		DataHandler handler = pm.create("{\"title\":\"SomeTitle1\",\"linkOnPodcastpedia\":\"http://goog332le1.com\",\"feed\":\"http://go1o2332gle.com\",\"description\":\"testDescription\",\"insertionDate\":1389295270000}");
 		assertNull(handler.getError());
 	}
 
