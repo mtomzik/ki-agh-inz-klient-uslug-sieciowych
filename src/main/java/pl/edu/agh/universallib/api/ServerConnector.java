@@ -16,6 +16,7 @@ import pl.edu.agh.universallib.api.handler.DataHandler;
 import pl.edu.agh.universallib.api.httpconnection.ConnectionType;
 import pl.edu.agh.universallib.api.httpconnection.HttpUrlConnectionGetSingleRecord;
 import pl.edu.agh.universallib.api.httpconnection.HttpUrlConnectionPostRecord;
+import pl.edu.agh.universallib.api.httpconnection.HttpUrlConnectionPutAndDeleteRecord;
 
 public class ServerConnector {
 
@@ -54,6 +55,24 @@ public class ServerConnector {
 				} catch (Exception e) {
 					e.printStackTrace();
 					throw new ProcessingException("Error POST with data " + apiCall.getData(), e);
+				}
+			} else if (apiCall.getConnectionType().equals(ConnectionType.PUT)){
+				HttpUrlConnectionPutAndDeleteRecord httpPut = new HttpUrlConnectionPutAndDeleteRecord();
+				try{
+					httpPut.putRecord(webServiceUrl + apiCall.getUrl(), apiCall.getData());
+					apiCalls.put(apiCall, new DataHandler(null,null));
+				} catch (Exception e){
+					e.printStackTrace();
+					throw new ProcessingException("Error PUT with data " + apiCall.getData(), e);
+				}
+			} else if (apiCall.getConnectionType().equals(ConnectionType.DELETE)){
+				HttpUrlConnectionPutAndDeleteRecord httpDelete = new HttpUrlConnectionPutAndDeleteRecord();
+				try{
+					httpDelete.deleteRecord(webServiceUrl + apiCall.getUrl());
+					apiCalls.put(apiCall, new DataHandler(null,null));
+				} catch (Exception e){
+					e.printStackTrace();
+					throw new ProcessingException("Error DELETE", e);
 				}
 			}
 		} catch (ProcessingException e) {

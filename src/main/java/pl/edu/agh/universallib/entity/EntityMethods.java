@@ -11,10 +11,10 @@ import pl.edu.agh.universallib.url.WebServiceType;
 public abstract class EntityMethods {
 	private final ServerConnector serverConnector;
 	private final String separator;
-	
-	public EntityMethods(String serviceUrl, WebServiceType webServiceType){
-		if (!serviceUrl.substring(serviceUrl.length() - 1 ).equals("/")){
-			serviceUrl = serviceUrl + "/"; 
+
+	public EntityMethods(String serviceUrl, WebServiceType webServiceType) {
+		if (!serviceUrl.substring(serviceUrl.length() - 1).equals("/")) {
+			serviceUrl = serviceUrl + "/";
 		}
 		this.serverConnector = new ServerConnector(serviceUrl);
 		this.separator = webServiceType.equals(WebServiceType.REST) ? "/" : "?";
@@ -25,26 +25,36 @@ public abstract class EntityMethods {
 	}
 
 	public DataHandler get(long id) throws EntityException {
-		ApiCall apiCall = prepareApiCall(getUrlPart() + separator + getIdPrefix(), ConnectionType.GET, id, null);
+		ApiCall apiCall = prepareApiCall(getUrlPart() + separator
+				+ getIdPrefix(), ConnectionType.GET, id, null);
 		return processApiCall(apiCall);
 	}
 
 	public DataHandler create(String data) throws EntityException {
-		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.POST, null, data);
+		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.POST,
+				null, data);
 		return processApiCall(apiCall);
 	}
 
-	public DataHandler update(Entity e, long id){
-		ApiCall apiCall = prepareApiCall("/podcasts/update/", ConnectionType.POST, id, null);
+	public DataHandler update(String data, long id) throws EntityException {
+		ApiCall apiCall = prepareApiCall(getUrlPart() + separator + getIdPrefix(), ConnectionType.PUT, id,
+				data);
 		return processApiCall(apiCall);
 	}
 
-	public DataHandler delete(long id){
-		ApiCall apiCall = prepareApiCall("/podcasts/delete/", ConnectionType.DELETE, id, null);
+	public DataHandler delete(long id) throws EntityException {
+		ApiCall apiCall = prepareApiCall(getUrlPart() + separator
+				+ getIdPrefix(), ConnectionType.DELETE, id, null);
 		return processApiCall(apiCall);
 	}
 
-	private ApiCall prepareApiCall(String url, ConnectionType connectionType, Long id, String data) {
+	public DataHandler deleteAll() throws EntityException {
+		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.DELETE, null, null);
+		return processApiCall(apiCall);
+	}
+
+	private ApiCall prepareApiCall(String url, ConnectionType connectionType,
+			Long id, String data) {
 		ApiCall apiCall = new ApiCall();
 		apiCall.setCallDate(new Date());
 		apiCall.setConnectionType(connectionType);
@@ -53,7 +63,7 @@ public abstract class EntityMethods {
 		return apiCall;
 	}
 
-	public String getIdPrefix() throws EntityException{
+	public String getIdPrefix() throws EntityException {
 		String idPrefix = null;
 		try {
 			idPrefix = (String) this.getClass().getField("idPrefix").get(this);
@@ -63,7 +73,7 @@ public abstract class EntityMethods {
 		return idPrefix;
 	}
 
-	public String getUrlPart() throws EntityException{
+	public String getUrlPart() throws EntityException {
 		String urlPart = null;
 		try {
 			urlPart = (String) this.getClass().getField("urlPart").get(this);
@@ -72,7 +82,7 @@ public abstract class EntityMethods {
 		}
 		return urlPart;
 	}
-	
+
 	private DataHandler processApiCall(ApiCall apiCall) {
 		serverConnector.process(apiCall);
 		return serverConnector.getDataHandler(apiCall);
