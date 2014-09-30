@@ -20,8 +20,9 @@ public abstract class EntityMethods {
 		this.separator = webServiceType.equals(WebServiceType.REST) ? "/" : "?";
 	}
 
-	public DataHandler getAll() {
-		return null;
+	public DataHandler getAll() throws EntityException {
+		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.GET, null, null);
+		return processApiCall(apiCall);
 	}
 
 	public DataHandler get(long id) throws EntityException {
