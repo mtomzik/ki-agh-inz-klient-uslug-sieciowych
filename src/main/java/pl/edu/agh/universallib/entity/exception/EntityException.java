@@ -1,8 +1,8 @@
-package pl.edu.agh.universallib.entity;
+package pl.edu.agh.universallib.entity.exception;
 
 public class EntityException extends Exception {
 
-	private static final long serialVersionUID = -49825530167945957L;
+	private static final long serialVersionUID = 4909092270212333485L;
 
 	public EntityException() {
 		super();

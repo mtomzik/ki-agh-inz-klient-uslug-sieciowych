@@ -12,6 +12,7 @@ import org.junit.Test;
 import pl.edu.agh.universallib.api.handler.DataHandler;
 import pl.edu.agh.universallib.entity.example.Podcast;
 import pl.edu.agh.universallib.entity.example.PodcastMethods;
+import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
 import pl.edu.agh.universallib.url.WebServiceType;
 
 public class PodcastTest {
@@ -20,7 +21,7 @@ public class PodcastTest {
 	private Podcast podcastExpectedEntity;
 
 	@Before
-	public void prepareEntity() throws EntityException {
+	public void prepareEntity() throws EntityMethodsException {
 		podcastMethods = new PodcastMethods(
 				"http://localhost:8888/springrestdemo-0.0.1-SNAPSHOT",
 				WebServiceType.REST);
@@ -34,14 +35,13 @@ public class PodcastTest {
 	}
 
 	@Test
-	public void getEntityTest() throws EntityException, JsonParseException, JsonMappingException, IOException {
+	public void mapEntityFromJsonTest() throws EntityMethodsException, JsonParseException, JsonMappingException, IOException {
 		DataHandler result = podcastMethods.get(1);
 		Podcast testPodcastEntity = new Podcast();
-		testPodcastEntity = (Podcast) podcastExpectedEntity.mapEntityFromJson(result.getData());
+		testPodcastEntity = (Podcast) podcastExpectedEntity.mapEntity(result.getData());
 		assertEquals(podcastExpectedEntity.getTitle(), testPodcastEntity.getTitle());
 		assertEquals(podcastExpectedEntity.getLinkOnPodcastpedia(), testPodcastEntity.getLinkOnPodcastpedia());
 		assertEquals(podcastExpectedEntity.getFeed(),testPodcastEntity.getFeed());
 		assertEquals(podcastExpectedEntity.getDescription(),testPodcastEntity.getDescription());
-		
 	}
 }

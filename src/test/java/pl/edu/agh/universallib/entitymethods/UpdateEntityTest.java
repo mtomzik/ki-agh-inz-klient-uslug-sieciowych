@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.edu.agh.universallib.entity.EntityException;
 import pl.edu.agh.universallib.entity.example.PodcastMethods;
+import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
 import pl.edu.agh.universallib.url.WebServiceType;
 
 public class UpdateEntityTest {
@@ -14,7 +14,7 @@ public class UpdateEntityTest {
 	private PodcastMethods pm;
 
 	@Before
-	public void prepareEntity() throws EntityException {
+	public void prepareEntity() throws EntityMethodsException {
 		pm = new PodcastMethods(
 				"http://localhost:8888/springrestdemo-0.0.1-SNAPSHOT/",
 				WebServiceType.REST);
@@ -23,7 +23,7 @@ public class UpdateEntityTest {
 	}
 
 	@Test
-	public void test() throws EntityException {
+	public void test() throws EntityMethodsException {
 		assertNull(pm
 				.update("{\"title\":\"SomeTitleAfterUpdate\"}",
 						1).getError());
