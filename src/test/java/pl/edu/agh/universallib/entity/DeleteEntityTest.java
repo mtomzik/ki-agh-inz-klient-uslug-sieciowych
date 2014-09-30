@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import pl.edu.agh.universallib.api.handler.DataHandler;
 import pl.edu.agh.universallib.entity.example.PodcastMethods;
 import pl.edu.agh.universallib.url.WebServiceType;
 
@@ -23,7 +24,9 @@ public class DeleteEntityTest {
 
 	@Test
 	public void test() throws EntityException {
-		assertNull(pm.delete(1).getError());
+		DataHandler dh = pm.delete(1);
+		assertNull(dh.getError());
+		assertEquals("204",dh.getData());
 		assertNull(pm.get(1).getData());
 	}
 

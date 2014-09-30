@@ -26,7 +26,7 @@ public class UpdateEntityTest {
 		assertNull(pm
 				.update("{\"title\":\"SomeTitleAfterUpdate\"}",
 						1).getError());
-		assertEquals("SomeTitleAfterUpdate", pm.get(1).getData().get("title"));
+		assertTrue(pm.get(1).getData().contains("SomeTitleAfterUpdate"));
 	}
 
 }

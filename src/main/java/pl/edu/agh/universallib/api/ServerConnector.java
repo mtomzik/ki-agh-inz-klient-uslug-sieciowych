@@ -1,15 +1,11 @@
 package pl.edu.agh.universallib.api;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 
 import pl.edu.agh.universallib.api.exception.ProcessingException;
 import pl.edu.agh.universallib.api.handler.DataHandler;
@@ -29,11 +25,9 @@ public class ServerConnector {
 	public void process(ApiCall apiCall) {
 		try {
 			if (apiCall.getConnectionType().equals(ConnectionType.GET)) {
-				Map<String,String> map = new HashMap<String,String>();
-				ObjectMapper mapper = new ObjectMapper();
 				try {
-					map = mapper.readValue(HttpUrlConnectionMethods.getSingleData(webServiceUrl + apiCall.getUrl()), new TypeReference<HashMap<String,String>>(){});
-					apiCalls.put(apiCall, new DataHandler(map,null));
+					String data = HttpUrlConnectionMethods.getSingleData(webServiceUrl + apiCall.getUrl());
+					apiCalls.put(apiCall, new DataHandler(data,null));
 				} catch (JsonParseException e) {
 					e.printStackTrace();
 					throw new ProcessingException("Couldn't parse JSON", e);
@@ -46,28 +40,30 @@ public class ServerConnector {
 				}
 			} else if (apiCall.getConnectionType().equals(ConnectionType.POST)){
 				try {
-					HttpUrlConnectionMethods.postRecord(webServiceUrl + apiCall.getUrl(), apiCall.getData());
-					apiCalls.put(apiCall, new DataHandler(null, null));
+					int result = HttpUrlConnectionMethods.postRecord(webServiceUrl + apiCall.getUrl(), apiCall.getData());
+					apiCalls.put(apiCall, new DataHandler(String.valueOf(result), null));
 				} catch (Exception e) {
 					e.printStackTrace();
 					throw new ProcessingException("Error POST with data " + apiCall.getData(), e);
 				}
 			} else if (apiCall.getConnectionType().equals(ConnectionType.PUT)){
 				try{
-					HttpUrlConnectionMethods.putRecord(webServiceUrl + apiCall.getUrl(), apiCall.getData());
-					apiCalls.put(apiCall, new DataHandler(null,null));
+					int result = HttpUrlConnectionMethods.putRecord(webServiceUrl + apiCall.getUrl(), apiCall.getData());
+					apiCalls.put(apiCall, new DataHandler(String.valueOf(result),null));
 				} catch (Exception e){
 					e.printStackTrace();
 					throw new ProcessingException("Error PUT with data " + apiCall.getData(), e);
 				}
 			} else if (apiCall.getConnectionType().equals(ConnectionType.DELETE)){
 				try{
-					HttpUrlConnectionMethods.deleteRecord(webServiceUrl + apiCall.getUrl());
-					apiCalls.put(apiCall, new DataHandler(null,null));
+					int result = HttpUrlConnectionMethods.deleteRecord(webServiceUrl + apiCall.getUrl());
+					apiCalls.put(apiCall, new DataHandler(String.valueOf(result),null));
 				} catch (Exception e){
 					e.printStackTrace();
 					throw new ProcessingException("Error DELETE", e);
 				}
+			} else {
+				throw new ProcessingException("Connection Type is null");
 			}
 		} catch (ProcessingException e) {
 			apiCalls.put(apiCall, new DataHandler(null, e.getLocalizedMessage()));

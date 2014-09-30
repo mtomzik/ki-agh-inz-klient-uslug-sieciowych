@@ -1,7 +1,7 @@
 package pl.edu.agh.universallib.entity;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class CreateEntityTest {
 		DataHandler handler = pm
 				.create("{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\",\"insertionDate\":1389295270000}");
 		assertNull(handler.getError());
-		assertEquals("SomeTitle", pm.get(1).getData().get("title"));
+		assertTrue(pm.get(1).getData().contains("\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\""));
 	}
 
 }
