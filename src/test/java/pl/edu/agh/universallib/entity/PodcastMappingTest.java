@@ -15,7 +15,7 @@ import pl.edu.agh.universallib.entity.example.PodcastMethods;
 import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
 import pl.edu.agh.universallib.url.WebServiceType;
 
-public class PodcastTest {
+public class PodcastMappingTest {
 
 	private PodcastMethods podcastMethods;
 	private Podcast podcastExpectedEntity;
@@ -35,7 +35,7 @@ public class PodcastTest {
 	}
 
 	@Test
-	public void mapEntityFromJsonTest() throws EntityMethodsException, JsonParseException, JsonMappingException, IOException {
+	public void mapEntityTest() throws EntityMethodsException, JsonParseException, JsonMappingException, IOException {
 		DataHandler result = podcastMethods.get(1);
 		Podcast testPodcastEntity = new Podcast();
 		testPodcastEntity = (Podcast) podcastExpectedEntity.mapEntity(result.getData());
