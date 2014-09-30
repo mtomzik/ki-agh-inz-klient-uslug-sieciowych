@@ -26,7 +26,6 @@ public class ServerConnectorTest {
 		apiCall.setConnectionType(ConnectionType.GET);
 		apiCall.setUrl("/podcasts/1");
 		serverConnector.process(apiCall);
-		System.out.println(serverConnector.getDataHandler(apiCall).getData());
 		assertFalse(serverConnector.getDataHandler(apiCall).getData().isEmpty());
 	}
 
