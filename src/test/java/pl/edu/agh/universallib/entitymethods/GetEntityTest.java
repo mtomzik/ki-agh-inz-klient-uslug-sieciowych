@@ -1,10 +1,11 @@
-package pl.edu.agh.universallib.entity;
+package pl.edu.agh.universallib.entitymethods;
 
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import pl.edu.agh.universallib.entity.EntityException;
 import pl.edu.agh.universallib.entity.example.PodcastMethods;
 import pl.edu.agh.universallib.url.WebServiceType;
 
