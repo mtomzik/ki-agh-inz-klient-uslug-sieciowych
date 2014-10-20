@@ -9,7 +9,6 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.edu.agh.universallib.api.handler.DataHandler;
 import pl.edu.agh.universallib.entity.example.Podcast;
 import pl.edu.agh.universallib.entity.example.PodcastMethods;
 import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
@@ -22,11 +21,12 @@ public class PodcastMappingTest {
 
 	@Before
 	public void prepareEntity() throws EntityMethodsException {
+		//TODO: konfigurator, connector? factory
 		podcastMethods = new PodcastMethods(
 				"http://localhost:8888/springrestdemo-0.0.1-SNAPSHOT",
 				WebServiceType.REST);
-		podcastMethods.deleteAll();
-		podcastMethods.create("{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\"}");
+		podcastMethods.deleteAll(new MyDataHandler());
+		podcastMethods.create("{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\"}", new MyDataHandler());
 		podcastExpectedEntity = new Podcast();
 		podcastExpectedEntity.setTitle("SomeTitle");
 		podcastExpectedEntity.setLinkOnPodcastpedia("http://google.com");
@@ -36,12 +36,14 @@ public class PodcastMappingTest {
 
 	@Test
 	public void mapEntityTest() throws EntityMethodsException, JsonParseException, JsonMappingException, IOException {
-		DataHandler result = podcastMethods.get(1);
+		MyDataHandler dataHandler = new MyDataHandler();
+		podcastMethods.get(1, dataHandler);
 		Podcast testPodcastEntity = new Podcast();
-		testPodcastEntity = (Podcast) podcastExpectedEntity.mapEntity(result.getData());
+		testPodcastEntity = (Podcast) podcastExpectedEntity.mapEntity(dataHandler.getData());
 		assertEquals(podcastExpectedEntity.getTitle(), testPodcastEntity.getTitle());
 		assertEquals(podcastExpectedEntity.getLinkOnPodcastpedia(), testPodcastEntity.getLinkOnPodcastpedia());
 		assertEquals(podcastExpectedEntity.getFeed(),testPodcastEntity.getFeed());
 		assertEquals(podcastExpectedEntity.getDescription(),testPodcastEntity.getDescription());
 	}
+	
 }
