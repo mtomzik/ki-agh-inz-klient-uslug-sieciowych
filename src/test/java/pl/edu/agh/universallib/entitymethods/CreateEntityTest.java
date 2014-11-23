@@ -8,20 +8,22 @@ import org.junit.Before;
 import org.junit.Test;
 
 import pl.edu.agh.universallib.entity.MyDataHandler;
-import pl.edu.agh.universallib.entity.example.PodcastMethods;
+import pl.edu.agh.universallib.entity.example.PodcastListMethods;
 import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
 import pl.edu.agh.universallib.url.WebServiceType;
+import pl.edu.agh.universallib.util.PropertiesLoader;
 
 public class CreateEntityTest {
 
-	private PodcastMethods pm;
+	
+	private PodcastListMethods pm;
 	
 	private MyDataHandler dataHandler;
 
 	@Before
 	public void prepareEntity() throws EntityMethodsException {
-		pm = new PodcastMethods(
-				"http://localhost:8888/springrestdemo-0.0.1-SNAPSHOT/",
+		pm = new PodcastListMethods(
+				PropertiesLoader.getWebServiceAddress(),
 				WebServiceType.REST);
 		dataHandler = new MyDataHandler();
 		pm.deleteAll(dataHandler);

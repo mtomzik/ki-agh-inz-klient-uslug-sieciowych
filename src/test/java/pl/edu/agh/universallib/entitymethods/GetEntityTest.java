@@ -7,26 +7,30 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
+import pl.edu.agh.universallib.api.handler.WebServiceDataHandler;
 import pl.edu.agh.universallib.entity.MyDataHandler;
-import pl.edu.agh.universallib.entity.example.PodcastMethods;
+import pl.edu.agh.universallib.entity.example.PodcastListMethods;
 import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
 import pl.edu.agh.universallib.url.WebServiceType;
+import pl.edu.agh.universallib.util.PropertiesLoader;
 
-public class GetEntityTest {
+public class GetEntityTest implements WebServiceDataHandler {
 
-	private PodcastMethods pm;
+	private PodcastListMethods pm;
 	private MyDataHandler dataHandler;
+	private String response;
+	
 	@Before
 	public void prepareEntity() throws EntityMethodsException {
-		pm = new PodcastMethods(
-				"http://localhost:8888/springrestdemo-0.0.1-SNAPSHOT",
+		pm = new PodcastListMethods(
+				PropertiesLoader.getWebServiceAddress(),
 				WebServiceType.REST);
 		dataHandler = new MyDataHandler();
 		pm.deleteAll(dataHandler);
 		pm.create("{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\"}", dataHandler);
 		dataHandler = new MyDataHandler();
 	}
-
+	
 	@Test
 	public void getEntityTest() throws EntityMethodsException {
 		pm.get(1, dataHandler);
@@ -42,5 +46,13 @@ public class GetEntityTest {
 		}
 		else fail();
 
+	}
+
+	@Override
+	public void processData(String data, Exception e) {
+		if (e == null || data != null){
+			System.out.println(data);
+		}
+		
 	}
 }

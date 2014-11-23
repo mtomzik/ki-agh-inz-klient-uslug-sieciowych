@@ -21,11 +21,6 @@ public abstract class EntityMethods {
 		this.separator = webServiceType.equals(WebServiceType.REST) ? "/" : "?";
 	}
 
-	public void getAll(WebServiceDataHandler dataHandler) throws EntityMethodsException {
-		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.GET, null, null);
-		processApiCall(apiCall, dataHandler);
-	}
-
 	public void get(long id, WebServiceDataHandler dataHandler) throws EntityMethodsException {
 		ApiCall apiCall = prepareApiCall(getUrlPart() + separator
 				+ getIdPrefix(), ConnectionType.GET, id, null);
@@ -50,12 +45,7 @@ public abstract class EntityMethods {
 		processApiCall(apiCall, dataHandler);
 	}
 
-	public void deleteAll(WebServiceDataHandler dataHandler) throws EntityMethodsException {
-		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.DELETE, null, null);
-		processApiCall(apiCall, dataHandler);
-	}
-
-	private ApiCall prepareApiCall(String url, ConnectionType connectionType,
+	protected ApiCall prepareApiCall(String url, ConnectionType connectionType,
 			Long id, String data) {
 		ApiCall apiCall = new ApiCall();
 		apiCall.setCallDate(new Date());
@@ -85,7 +75,7 @@ public abstract class EntityMethods {
 		return urlPart;
 	}
 
-	private void processApiCall(ApiCall apiCall, WebServiceDataHandler dataHandler) {
+	protected void processApiCall(ApiCall apiCall, WebServiceDataHandler dataHandler) {
 		serverConnector.process(apiCall, dataHandler);
 	}
 }

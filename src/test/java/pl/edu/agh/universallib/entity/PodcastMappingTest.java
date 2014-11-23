@@ -10,19 +10,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 import pl.edu.agh.universallib.entity.example.Podcast;
-import pl.edu.agh.universallib.entity.example.PodcastMethods;
+import pl.edu.agh.universallib.entity.example.PodcastListMethods;
 import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
 import pl.edu.agh.universallib.url.WebServiceType;
 
 public class PodcastMappingTest {
 
-	private PodcastMethods podcastMethods;
+	private PodcastListMethods podcastMethods;
 	private Podcast podcastExpectedEntity;
 
 	@Before
 	public void prepareEntity() throws EntityMethodsException {
 		//TODO: konfigurator, connector? factory
-		podcastMethods = new PodcastMethods(
+		podcastMethods = new PodcastListMethods(
 				"http://localhost:8888/springrestdemo-0.0.1-SNAPSHOT",
 				WebServiceType.REST);
 		podcastMethods.deleteAll(new MyDataHandler());
