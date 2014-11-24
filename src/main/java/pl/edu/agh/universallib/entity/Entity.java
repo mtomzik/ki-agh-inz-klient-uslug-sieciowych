@@ -18,9 +18,9 @@ import pl.edu.agh.universallib.entity.exception.EntityException;
 
 abstract public class Entity {
 
-	ObjectMapper objectMapper = new ObjectMapper();
+	private ObjectMapper objectMapper = new ObjectMapper();
 
-	private Entity mapEntityFromJson(String json) throws JsonParseException,
+	protected Entity mapEntityFromJson(String json) throws JsonParseException,
 			JsonMappingException, IOException {
 		return objectMapper.readValue(json, this.getClass());
 	}

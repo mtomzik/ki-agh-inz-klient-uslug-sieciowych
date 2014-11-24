@@ -21,6 +21,10 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.type.TypeFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -33,10 +37,11 @@ import pl.edu.agh.universallib.entity.exception.EntityException;
 public class EntityList extends Entity {
 
 	Entity entityType;
-	
-	public EntityList(Entity entityType){
+
+	public EntityList(Entity entityType) {
 		this.entityType = entityType;
 	}
+
 	private List<Entity> entities;
 
 	public List<Entity> getEntities() {
@@ -47,40 +52,51 @@ public class EntityList extends Entity {
 		this.entities = entities;
 	}
 
-	public List<Entity> mapEntities(String inputString) throws EntityException{
+	public List<Entity> mapEntities(String inputString) throws EntityException {
 		try {
-			if (inputString.charAt(0) == '<')
+			if (inputString.charAt(0) == '<') {
 				return mapEntitiesFromXml(inputString);
-			else if (inputString.charAt(0) == '{')
+			} else if (inputString.charAt(0) == '{') {
+				List<Entity> listToReturn = new ArrayList<Entity>();
+				listToReturn.add(mapEntityFromJson(inputString));
+				return listToReturn;
+			} else if (inputString.charAt(0) == '['){
 				return mapEntitiesFromJson(inputString);
-			else
+			}
+			else {
 				throw new EntityException("Bad data, cannot map entity");
-	} finally {
-		
+			}
+		} catch (JsonParseException e) {
+			throw new EntityException(e);
+		} catch (JsonMappingException e) {
+			throw new EntityException(e);
+		} catch (IOException e) {
+			throw new EntityException(e);
+		}
 	}
-}
 
-	private List<Entity> mapEntitiesFromJson(String inputString) {
-		return entities;
-
+	private List<Entity> mapEntitiesFromJson(String inputString) throws EntityException, JsonParseException, JsonMappingException, IOException {
+		ObjectMapper objectMapper = new ObjectMapper();
+		TypeFactory typeFactory = objectMapper.getTypeFactory();
+		return new ObjectMapper().readValue(inputString, typeFactory.constructCollectionType(List.class, entityType.getClass()));
 	}
 
 	private List<Entity> mapEntitiesFromXml(String inputString) throws EntityException {
 		List<Entity> entities = new ArrayList<Entity>();
 		try {
-		DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder;
+			DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder;
 			builder = builderFactory.newDocumentBuilder();
-        Document xmlDocument = builder.parse(new InputSource(new StringReader(inputString)));
-        XPathFactory xPathfactory = XPathFactory.newInstance();
-        XPath xPath = xPathfactory.newXPath();
-        XPathExpression expr = xPath.compile("*/*");
-        NodeList nodeList = (NodeList) expr.evaluate(xmlDocument, XPathConstants.NODESET);
-        for (int i = 0; i < nodeList.getLength(); i++) {
-            String node = nodeToString(nodeList.item(i));
-            Entity entityToInsert = entityType.mapEntity(node);
-            entities.add(entityToInsert);
-        }
+			Document xmlDocument = builder.parse(new InputSource(new StringReader(inputString)));
+			XPathFactory xPathfactory = XPathFactory.newInstance();
+			XPath xPath = xPathfactory.newXPath();
+			XPathExpression expr = xPath.compile("*/*");
+			NodeList nodeList = (NodeList) expr.evaluate(xmlDocument, XPathConstants.NODESET);
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				String node = nodeToString(nodeList.item(i));
+				Entity entityToInsert = entityType.mapEntity(node);
+				entities.add(entityToInsert);
+			}
 		} catch (ParserConfigurationException e) {
 			throw new EntityException(e);
 		} catch (SAXException e) {
@@ -92,16 +108,14 @@ public class EntityList extends Entity {
 		} catch (TransformerException e) {
 			throw new EntityException(e);
 		}
-        return entities;
+		return entities;
 	}
-	
-	private static String nodeToString(Node node)
-			throws TransformerException
-			{
-			    StringWriter buf = new StringWriter();
-			    Transformer xform = TransformerFactory.newInstance().newTransformer();
-			    xform.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-			    xform.transform(new DOMSource(node), new StreamResult(buf));
-			    return(buf.toString());
-			}
+
+	private static String nodeToString(Node node) throws TransformerException {
+		StringWriter buf = new StringWriter();
+		Transformer xform = TransformerFactory.newInstance().newTransformer();
+		xform.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+		xform.transform(new DOMSource(node), new StreamResult(buf));
+		return (buf.toString());
+	}
 }
