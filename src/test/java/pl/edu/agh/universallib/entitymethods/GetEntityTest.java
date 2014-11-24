@@ -18,7 +18,6 @@ public class GetEntityTest implements WebServiceDataHandler {
 
 	private PodcastListMethods pm;
 	private MyDataHandler dataHandler;
-	private String response;
 	
 	@Before
 	public void prepareEntity() throws EntityMethodsException {
