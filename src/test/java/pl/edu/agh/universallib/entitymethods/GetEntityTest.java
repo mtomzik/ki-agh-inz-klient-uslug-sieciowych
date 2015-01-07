@@ -31,8 +31,13 @@ public class GetEntityTest implements WebServiceDataHandler {
 	}
 	
 	@Test
-	public void getEntityTest() throws EntityMethodsException {
+	public void getEntityTest() throws EntityMethodsException, InterruptedException {
 		pm.get(1, dataHandler);
+		System.out.println("This should be printed first");
+		while(dataHandler.getData() == null && dataHandler.getError() == null){
+			System.out.println("Waiting for response...");
+			Thread.sleep(1000);
+		}
 		assertNull(dataHandler.getError());
 		String data = dataHandler.getData();
 		if (data.charAt(0) == '{')

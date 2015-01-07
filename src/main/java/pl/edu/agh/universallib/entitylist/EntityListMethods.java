@@ -12,14 +12,28 @@ public class EntityListMethods extends EntityMethods {
 
 	private int pageLength;
 	private boolean paginated;
-
+	
 	public EntityListMethods(String webServiceUrl, WebServiceType webServiceType) {
-		super(webServiceUrl, webServiceType);
+		super(webServiceUrl, webServiceType, 1);
 		this.paginated = false;
 	}
 
+	public EntityListMethods(String webServiceUrl, WebServiceType webServiceType, boolean paginated, int nThreads) {
+		super(webServiceUrl, webServiceType, nThreads);
+		this.paginated = paginated;
+		this.currentIndex = 0;
+		this.pageLength = 10;
+	}
+	
 	public EntityListMethods(String webServiceUrl, WebServiceType webServiceType, int pageLength) {
-		super(webServiceUrl, webServiceType);
+		super(webServiceUrl, webServiceType, 1);
+		this.pageLength = pageLength;
+		this.currentIndex = 0;
+		this.paginated = true;
+	}
+
+	public EntityListMethods(String webServiceUrl, WebServiceType webServiceType, int pageLength, int nThreads) {
+		super(webServiceUrl, webServiceType, nThreads);
 		this.pageLength = pageLength;
 		this.currentIndex = 0;
 		this.paginated = true;

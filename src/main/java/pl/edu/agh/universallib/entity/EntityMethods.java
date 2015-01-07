@@ -1,24 +1,38 @@
 package pl.edu.agh.universallib.entity;
 
 import java.util.Date;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import pl.edu.agh.universallib.api.ApiCall;
 import pl.edu.agh.universallib.api.ServerConnector;
 import pl.edu.agh.universallib.api.handler.WebServiceDataHandler;
 import pl.edu.agh.universallib.api.httpconnection.ConnectionType;
+import pl.edu.agh.universallib.api.runnable.ServerConnectorRunnable;
 import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
 import pl.edu.agh.universallib.url.WebServiceType;
 
 public abstract class EntityMethods {
 	private final ServerConnector serverConnector;
 	private final String separator;
-
+	private final Executor executor;
+	
 	public EntityMethods(String serviceUrl, WebServiceType webServiceType) {
 		if (!serviceUrl.substring(serviceUrl.length() - 1).equals("/")) {
 			serviceUrl = serviceUrl + "/";
 		}
 		this.serverConnector = new ServerConnector(serviceUrl);
 		this.separator = webServiceType.equals(WebServiceType.REST) ? "/" : "?";
+		this.executor = Executors.newFixedThreadPool(1);
+	}
+
+	public EntityMethods(String serviceUrl, WebServiceType webServiceType, int nThreads) {
+		if (!serviceUrl.substring(serviceUrl.length() - 1).equals("/")) {
+			serviceUrl = serviceUrl + "/";
+		}
+		this.serverConnector = new ServerConnector(serviceUrl);
+		this.separator = webServiceType.equals(WebServiceType.REST) ? "/" : "?";
+		this.executor = Executors.newFixedThreadPool(nThreads);
 	}
 
 	public void get(long id, WebServiceDataHandler dataHandler) throws EntityMethodsException {
@@ -74,8 +88,9 @@ public abstract class EntityMethods {
 		}
 		return urlPart;
 	}
-
-	protected void processApiCall(ApiCall apiCall, WebServiceDataHandler dataHandler) {
-		serverConnector.process(apiCall, dataHandler);
+	
+	protected void processApiCall(ApiCall apiCall, WebServiceDataHandler dataHandler){
+		ServerConnectorRunnable runnable = new ServerConnectorRunnable(serverConnector, dataHandler, apiCall);
+		executor.execute(runnable);
 	}
 }
