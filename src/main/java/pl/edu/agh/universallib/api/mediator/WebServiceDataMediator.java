@@ -28,6 +28,7 @@ public class WebServiceDataMediator<T> {
 					dataHandler.processData(entityList, e);
 				} else if (Entity.class.isAssignableFrom(cls)) {
 					Entity entity = (Entity) cls.newInstance();
+					entity = entity.mapEntity(data);
 					dataHandler.processData(entity, e);
 				} else {
 
