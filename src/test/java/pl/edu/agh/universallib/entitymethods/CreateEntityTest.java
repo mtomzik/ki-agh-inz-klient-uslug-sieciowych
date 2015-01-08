@@ -7,7 +7,7 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.edu.agh.universallib.entity.MyDataHandler;
+import pl.edu.agh.universallib.entity.PodcastDataHandler;
 import pl.edu.agh.universallib.entity.example.PodcastListMethods;
 import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
 import pl.edu.agh.universallib.url.WebServiceType;
@@ -18,14 +18,14 @@ public class CreateEntityTest {
 	
 	private PodcastListMethods pm;
 	
-	private MyDataHandler dataHandler;
+	private PodcastDataHandler dataHandler;
 
 	@Before
 	public void prepareEntity() throws EntityMethodsException {
 		pm = new PodcastListMethods(
 				PropertiesLoader.getWebServiceAddress(),
 				WebServiceType.REST);
-		dataHandler = new MyDataHandler();
+		dataHandler = new PodcastDataHandler();
 		pm.deleteAll(dataHandler);
 	}
 

@@ -3,9 +3,9 @@ package pl.edu.agh.universallib.api;
 import java.io.IOException;
 
 import pl.edu.agh.universallib.api.exception.ProcessingException;
-import pl.edu.agh.universallib.api.handler.WebServiceDataHandler;
 import pl.edu.agh.universallib.api.httpconnection.ConnectionType;
 import pl.edu.agh.universallib.api.httpconnection.HttpUrlConnectionMethods;
+import pl.edu.agh.universallib.api.mediator.WebServiceDataMediator;
 
 public class ServerConnector {
 
@@ -15,7 +15,7 @@ public class ServerConnector {
 		this.webServiceUrl = webServiceUrl;
 	}
 
-	public void process(ApiCall apiCall, WebServiceDataHandler dataHandler) {
+	public void process(ApiCall apiCall, WebServiceDataMediator<?> dataHandler) {
 		try {
 			if (apiCall.getConnectionType().equals(ConnectionType.GET)) {
 				try {

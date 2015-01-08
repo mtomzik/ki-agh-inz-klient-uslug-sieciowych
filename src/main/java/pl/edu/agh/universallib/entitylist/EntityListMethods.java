@@ -7,7 +7,7 @@ import pl.edu.agh.universallib.entity.EntityMethods;
 import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
 import pl.edu.agh.universallib.url.WebServiceType;
 
-public class EntityListMethods extends EntityMethods {
+public class EntityListMethods<T extends EntityList> extends EntityMethods<T> {
 	private int currentIndex;
 
 	private int pageLength;
@@ -16,13 +16,13 @@ public class EntityListMethods extends EntityMethods {
 	private String currentIndexUrlPart;
 	private String pageLengthUrlPart;
 	
-	public EntityListMethods(String webServiceUrl, WebServiceType webServiceType) {
-		super(webServiceUrl, webServiceType, 1);
+	public EntityListMethods(Class<T> cls, String webServiceUrl, WebServiceType webServiceType) {
+		super(cls, webServiceUrl, webServiceType, 1);
 		this.paginated = false;
 	}
 
-	public EntityListMethods(String webServiceUrl, WebServiceType webServiceType, String currIndexUrlPart, String pageLengthUrlPart, int nThreads) {
-		super(webServiceUrl, webServiceType, nThreads);
+	public EntityListMethods(Class<T> cls, String webServiceUrl, WebServiceType webServiceType, String currIndexUrlPart, String pageLengthUrlPart, int nThreads) {
+		super(cls, webServiceUrl, webServiceType, nThreads);
 		this.paginated = true;
 		this.currentIndex = 0;
 		this.pageLength = 10;
@@ -30,8 +30,8 @@ public class EntityListMethods extends EntityMethods {
 		this.pageLengthUrlPart = pageLengthUrlPart;
 	}
 	
-	public EntityListMethods(String webServiceUrl, WebServiceType webServiceType, String currIndexUrlPart, String pageLengthUrlPart) {
-		super(webServiceUrl, webServiceType, 1);
+	public EntityListMethods(Class<T> cls, String webServiceUrl, WebServiceType webServiceType, String currIndexUrlPart, String pageLengthUrlPart) {
+		super(cls, webServiceUrl, webServiceType, 1);
 		this.paginated = true;
 		this.pageLength = 10;
 		this.currentIndex = 0;

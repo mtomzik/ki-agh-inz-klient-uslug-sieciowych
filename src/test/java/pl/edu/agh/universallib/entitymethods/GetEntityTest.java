@@ -7,27 +7,26 @@ import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.edu.agh.universallib.api.handler.WebServiceDataHandler;
-import pl.edu.agh.universallib.entity.MyDataHandler;
+import pl.edu.agh.universallib.entity.PodcastDataHandler;
 import pl.edu.agh.universallib.entity.example.PodcastListMethods;
 import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
 import pl.edu.agh.universallib.url.WebServiceType;
 import pl.edu.agh.universallib.util.PropertiesLoader;
 
-public class GetEntityTest implements WebServiceDataHandler {
+public class GetEntityTest {
 
 	private PodcastListMethods pm;
-	private MyDataHandler dataHandler;
+	private PodcastDataHandler dataHandler;
 	
 	@Before
 	public void prepareEntity() throws EntityMethodsException {
 		pm = new PodcastListMethods(
 				PropertiesLoader.getWebServiceAddress(),
 				WebServiceType.REST);
-		dataHandler = new MyDataHandler();
+		dataHandler = new PodcastDataHandler();
 		pm.deleteAll(dataHandler);
 		pm.create("{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\"}", dataHandler);
-		dataHandler = new MyDataHandler();
+		dataHandler = new PodcastDataHandler();
 	}
 	
 	@Test
@@ -50,13 +49,5 @@ public class GetEntityTest implements WebServiceDataHandler {
 		}
 		else fail();
 
-	}
-
-	@Override
-	public void processData(String data, Exception e) {
-		if (e == null || data != null){
-			System.out.println(data);
-		}
-		
 	}
 }

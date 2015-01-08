@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import pl.edu.agh.universallib.entity.example.Podcast;
 import pl.edu.agh.universallib.entity.example.PodcastListMethods;
+import pl.edu.agh.universallib.entity.example.PodcastMethods;
 import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
 import pl.edu.agh.universallib.url.WebServiceType;
 import pl.edu.agh.universallib.util.PropertiesLoader;
@@ -22,16 +23,19 @@ public class PodcastMappingTest {
 
 	private static final String ENTITY_JSON = "{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\"}";
 	
-	private PodcastListMethods podcastMethods;
+	private PodcastListMethods podcastListMethods;
+	private PodcastMethods podcastMethods;
 	private Podcast podcastExpectedEntity;
 
 	@Before
-	public void prepareEntity() throws EntityMethodsException {
-		podcastMethods = new PodcastListMethods(
+	public void prepareEntity() throws EntityMethodsException, InterruptedException {
+		podcastListMethods = new PodcastListMethods(
 				PropertiesLoader.getWebServiceAddress(),
 				WebServiceType.REST);
-		podcastMethods.deleteAll(new MyDataHandler());
-		podcastMethods.create(ENTITY_JSON, new MyDataHandler());
+		podcastListMethods.deleteAll(new PodcastDataHandler());
+		Thread.sleep(500);
+		podcastListMethods.create(ENTITY_JSON, new PodcastDataHandler());
+		podcastMethods = new PodcastMethods(PropertiesLoader.getWebServiceAddress(), WebServiceType.REST);
 		podcastExpectedEntity = new Podcast();
 		podcastExpectedEntity.setTitle("SomeTitle");
 		podcastExpectedEntity.setLinkOnPodcastpedia("http://google.com");
@@ -40,11 +44,14 @@ public class PodcastMappingTest {
 	}
 
 	@Test
-	public void mapEntityTest() throws EntityMethodsException, JsonParseException, JsonMappingException, IOException {
-		MyDataHandler dataHandler = new MyDataHandler();
+	public void mapEntityTest() throws EntityMethodsException, JsonParseException, JsonMappingException, IOException, InterruptedException {
+		PodcastDataHandler dataHandler = new PodcastDataHandler();
 		podcastMethods.get(1, dataHandler);
-		Podcast testPodcastEntity = new Podcast();
-		testPodcastEntity = (Podcast) podcastExpectedEntity.mapEntity(dataHandler.getData());
+		while (dataHandler.getResult() == null){
+			System.out.println("Waiting for result...");
+			Thread.sleep(1000);
+		}
+		Podcast testPodcastEntity = dataHandler.getResult();
 		assertEquals(podcastExpectedEntity.getTitle(), testPodcastEntity.getTitle());
 		assertEquals(podcastExpectedEntity.getLinkOnPodcastpedia(), testPodcastEntity.getLinkOnPodcastpedia());
 		assertEquals(podcastExpectedEntity.getFeed(),testPodcastEntity.getFeed());

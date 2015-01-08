@@ -8,28 +8,33 @@ import pl.edu.agh.universallib.api.ApiCall;
 import pl.edu.agh.universallib.api.ServerConnector;
 import pl.edu.agh.universallib.api.handler.WebServiceDataHandler;
 import pl.edu.agh.universallib.api.httpconnection.ConnectionType;
+import pl.edu.agh.universallib.api.mediator.WebServiceDataMediator;
 import pl.edu.agh.universallib.api.runnable.ServerConnectorRunnable;
 import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
 import pl.edu.agh.universallib.url.WebServiceType;
 
-public abstract class EntityMethods {
+public abstract class EntityMethods<T extends Entity> {
 	private final ServerConnector serverConnector;
 	private final String separator;
 	private final Executor executor;
 	
-	public EntityMethods(String serviceUrl, WebServiceType webServiceType) {
+	private final Class<T> cls;
+	
+	public EntityMethods(Class<T> cls, String serviceUrl, WebServiceType webServiceType) {
 		if (!serviceUrl.substring(serviceUrl.length() - 1).equals("/")) {
 			serviceUrl = serviceUrl + "/";
 		}
 		this.serverConnector = new ServerConnector(serviceUrl);
 		this.separator = webServiceType.equals(WebServiceType.REST) ? "/" : "?";
 		this.executor = Executors.newFixedThreadPool(1);
+		this.cls = cls;
 	}
 
-	public EntityMethods(String serviceUrl, WebServiceType webServiceType, int nThreads) {
+	public EntityMethods(Class<T> cls, String serviceUrl, WebServiceType webServiceType, int nThreads) {
 		if (!serviceUrl.substring(serviceUrl.length() - 1).equals("/")) {
 			serviceUrl = serviceUrl + "/";
 		}
+		this.cls = cls;
 		this.serverConnector = new ServerConnector(serviceUrl);
 		this.separator = webServiceType.equals(WebServiceType.REST) ? "/" : "?";
 		this.executor = Executors.newFixedThreadPool(nThreads);
@@ -90,7 +95,8 @@ public abstract class EntityMethods {
 	}
 	
 	protected void processApiCall(ApiCall apiCall, WebServiceDataHandler dataHandler){
-		ServerConnectorRunnable runnable = new ServerConnectorRunnable(serverConnector, dataHandler, apiCall);
+		WebServiceDataMediator<T> mediator = new WebServiceDataMediator<T>(dataHandler, cls);
+		ServerConnectorRunnable runnable = new ServerConnectorRunnable(serverConnector, mediator, apiCall);
 		executor.execute(runnable);
 	}
 }
