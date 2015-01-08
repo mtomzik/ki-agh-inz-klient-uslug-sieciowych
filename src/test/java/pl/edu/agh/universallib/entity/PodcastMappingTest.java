@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import javax.xml.bind.JAXBException;
+
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -60,4 +62,9 @@ public class PodcastMappingTest {
 		assertEquals(ENTITY_JSON, podcastExpectedEntity.mapToJson(false));
 	}
 	
+	@Test
+	public void mapEntityWithNullsToXmlTest() throws JAXBException{
+		String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Podcast><description>testDescription</description><feed>http://googlee.com</feed><linkOnPodcastpedia>http://google.com</linkOnPodcastpedia><title>SomeTitle</title></Podcast>";
+		assertEquals(expected, podcastExpectedEntity.mapToXml());
+	}
 }

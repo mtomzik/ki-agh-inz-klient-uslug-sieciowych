@@ -2,11 +2,14 @@ package pl.edu.agh.universallib.entity;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
@@ -27,6 +30,12 @@ abstract public class Entity {
 		return objectMapper.readValue(json, this.getClass());
 	}
 
+	public String mapToJson(boolean includeNulls) throws JsonGenerationException, JsonMappingException, IOException {
+		objectMapper.setSerializationInclusion(includeNulls ? Inclusion.ALWAYS : Inclusion.NON_NULL);
+		ObjectWriter ow = objectMapper.writer();
+		return ow.writeValueAsString(this);
+	}
+	
 	private Entity mapEntityFromXml(String xml) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -35,6 +44,22 @@ abstract public class Entity {
 		return (Entity) je1.getValue();
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public String mapToXml() throws JAXBException{
+		JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+		
+		StringWriter writer = new StringWriter();
+		JAXBElement jaxbElement = new JAXBElement(new QName(this.getClass().getSimpleName()), this.getClass(), this);
+		jaxbMarshaller.marshal(jaxbElement, writer);
+		String result = writer.toString();
+		try {
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 	public Entity mapEntity(String inputString) {
 		try {
 			try {
@@ -60,10 +85,5 @@ abstract public class Entity {
 		return null;
 	}
 
-	public String mapToJson(boolean includeNulls) throws JsonGenerationException, JsonMappingException, IOException {
-		objectMapper.setSerializationInclusion(includeNulls ? Inclusion.ALWAYS : Inclusion.NON_NULL);
-		ObjectWriter ow = objectMapper.writer();
-		return ow.writeValueAsString(this);
-	}
 
 }
