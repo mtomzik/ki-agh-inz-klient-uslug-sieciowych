@@ -10,9 +10,12 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
+import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 
 import pl.edu.agh.universallib.entity.exception.EntityException;
 
@@ -20,8 +23,7 @@ abstract public class Entity {
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 
-	protected Entity mapEntityFromJson(String json) throws JsonParseException,
-			JsonMappingException, IOException {
+	protected Entity mapEntityFromJson(String json) throws JsonParseException, JsonMappingException, IOException {
 		return objectMapper.readValue(json, this.getClass());
 	}
 
@@ -29,8 +31,7 @@ abstract public class Entity {
 		JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		Source streamSource = new StreamSource(new StringReader(xml));
-		JAXBElement<?> je1 = jaxbUnmarshaller.unmarshal(streamSource,
-				this.getClass());
+		JAXBElement<?> je1 = jaxbUnmarshaller.unmarshal(streamSource, this.getClass());
 		return (Entity) je1.getValue();
 	}
 
@@ -57,6 +58,12 @@ abstract public class Entity {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public String mapToJson(boolean includeNulls) throws JsonGenerationException, JsonMappingException, IOException {
+		objectMapper.setSerializationInclusion(includeNulls ? Inclusion.ALWAYS : Inclusion.NON_NULL);
+		ObjectWriter ow = objectMapper.writer();
+		return ow.writeValueAsString(this);
 	}
 
 }
