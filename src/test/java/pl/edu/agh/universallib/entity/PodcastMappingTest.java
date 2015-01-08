@@ -39,7 +39,7 @@ public class PodcastMappingTest {
 		podcastExpectedEntity.setDescription("testDescription");
 	}
 
-	//@Test
+	@Test
 	public void mapEntityTest() throws EntityMethodsException, JsonParseException, JsonMappingException, IOException {
 		MyDataHandler dataHandler = new MyDataHandler();
 		podcastMethods.get(1, dataHandler);

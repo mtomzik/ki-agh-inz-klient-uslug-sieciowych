@@ -13,30 +13,30 @@ public class EntityListMethods extends EntityMethods {
 	private int pageLength;
 	private boolean paginated;
 	
+	private String currentIndexUrlPart;
+	private String pageLengthUrlPart;
+	
 	public EntityListMethods(String webServiceUrl, WebServiceType webServiceType) {
 		super(webServiceUrl, webServiceType, 1);
 		this.paginated = false;
 	}
 
-	public EntityListMethods(String webServiceUrl, WebServiceType webServiceType, boolean paginated, int nThreads) {
+	public EntityListMethods(String webServiceUrl, WebServiceType webServiceType, String currIndexUrlPart, String pageLengthUrlPart, int nThreads) {
 		super(webServiceUrl, webServiceType, nThreads);
-		this.paginated = paginated;
+		this.paginated = true;
 		this.currentIndex = 0;
 		this.pageLength = 10;
+		this.currentIndexUrlPart = currIndexUrlPart;
+		this.pageLengthUrlPart = pageLengthUrlPart;
 	}
 	
-	public EntityListMethods(String webServiceUrl, WebServiceType webServiceType, int pageLength) {
+	public EntityListMethods(String webServiceUrl, WebServiceType webServiceType, String currIndexUrlPart, String pageLengthUrlPart) {
 		super(webServiceUrl, webServiceType, 1);
-		this.pageLength = pageLength;
-		this.currentIndex = 0;
 		this.paginated = true;
-	}
-
-	public EntityListMethods(String webServiceUrl, WebServiceType webServiceType, int pageLength, int nThreads) {
-		super(webServiceUrl, webServiceType, nThreads);
-		this.pageLength = pageLength;
+		this.pageLength = 10;
 		this.currentIndex = 0;
-		this.paginated = true;
+		this.currentIndexUrlPart = currIndexUrlPart;
+		this.pageLengthUrlPart = pageLengthUrlPart;
 	}
 
 	public int getCurrentIndex() {
@@ -62,6 +62,18 @@ public class EntityListMethods extends EntityMethods {
 	public void getAll(WebServiceDataHandler dataHandler) throws EntityMethodsException {
 		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.GET, null, null);
 		processApiCall(apiCall, dataHandler);
+	}
+	
+	public void getPage(WebServiceDataHandler dataHandler) throws EntityMethodsException {
+		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.GET, null, null);
+		String currentUrl = apiCall.getUrl();
+		if (currentUrl.charAt(currentUrl.length() - 1) == '/'){
+			currentUrl = currentUrl.substring(0, currentUrl.length() - 1);
+		}
+		String urlToSet = currentUrl + "?" + currentIndexUrlPart + "=" + currentIndex + "&" + pageLengthUrlPart + "=" + pageLength;
+		apiCall.setUrl(urlToSet);
+		processApiCall(apiCall, dataHandler);
+		currentIndex += pageLength;
 	}
 
 	public void deleteAll(WebServiceDataHandler dataHandler) throws EntityMethodsException {
