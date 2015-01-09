@@ -1,8 +1,12 @@
 package pl.edu.agh.universallib.entity;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
 
 import pl.edu.agh.universallib.api.ApiCall;
 import pl.edu.agh.universallib.api.ServerConnector;
@@ -50,6 +54,18 @@ public abstract class EntityMethods<T extends Entity> {
 		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.POST,
 				null, data);
 		processApiCall(apiCall, dataHandler);
+	}
+	
+	public void create(Entity data, WebServiceDataHandler dataHandler) throws EntityMethodsException{
+		try {
+			create(data.mapToJson(false), dataHandler);
+		} catch (JsonGenerationException e) {
+			throw new EntityMethodsException("Problem with generating Json");
+		} catch (JsonMappingException e) {
+			throw new EntityMethodsException("Problem with mapping Entity to Json");
+		} catch (IOException e) {
+			throw new EntityMethodsException();
+		}
 	}
 
 	public void update(String data, long id, WebServiceDataHandler dataHandler) throws EntityMethodsException {
