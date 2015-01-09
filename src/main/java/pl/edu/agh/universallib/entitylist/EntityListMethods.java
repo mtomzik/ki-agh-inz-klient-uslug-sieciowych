@@ -59,11 +59,19 @@ public class EntityListMethods<T extends EntityList> extends EntityMethods<T> {
 		return paginated;
 	}
 
+	/**This method fetches all records from Webservice
+	 * @param dataHandler dataHandler that will be called when a response is received or an exception occurs
+	 * @throws EntityMethodsException
+	 */
 	public void getAll(WebServiceDataHandler dataHandler) throws EntityMethodsException {
 		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.GET, null, null);
 		processApiCall(apiCall, dataHandler);
 	}
-	
+
+	/**This method fetches all records from current page and increments current position
+	 * @param dataHandler dataHandler that will be called when a response is received or an exception occurs
+	 * @throws EntityMethodsException
+	 */
 	public void getPage(WebServiceDataHandler dataHandler) throws EntityMethodsException {
 		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.GET, null, null);
 		String currentUrl = apiCall.getUrl();
@@ -76,6 +84,10 @@ public class EntityListMethods<T extends EntityList> extends EntityMethods<T> {
 		currentIndex += pageLength;
 	}
 
+	/**This method deletes all records
+	 * @param dataHandler dataHandler that will be called when a response is received or an exception occurs
+	 * @throws EntityMethodsException
+	 */
 	public void deleteAll(WebServiceDataHandler dataHandler) throws EntityMethodsException {
 		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.DELETE, null, null);
 		processApiCall(apiCall, dataHandler);

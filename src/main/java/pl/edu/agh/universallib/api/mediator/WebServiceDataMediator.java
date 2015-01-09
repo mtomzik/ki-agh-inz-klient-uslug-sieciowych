@@ -5,6 +5,10 @@ import pl.edu.agh.universallib.entity.Entity;
 import pl.edu.agh.universallib.entity.exception.EntityException;
 import pl.edu.agh.universallib.entitylist.EntityList;
 
+/** Class that serves as a mediator between ServerConnector and WebServiceDataHandler
+ *
+ * @param <T> The class that will be mapped from a response
+ */
 public class WebServiceDataMediator<T> {
 
 	private final WebServiceDataHandler dataHandler;
@@ -15,6 +19,11 @@ public class WebServiceDataMediator<T> {
 		this.cls = cls;
 	}
 
+	/**Method processed a string response from webservice and maps it to Entity or EntityList of type T.
+	 * If an exception occurs, dataHandler.processData is called with this exception as a parameter.
+	 * @param data Response from Webservice
+	 * @param e Exception if occured during http requests
+	 */
 	public void processData(String data, Exception e) {
 		if (e != null) {
 			dataHandler.processData(null, e);

@@ -26,16 +26,35 @@ abstract public class Entity {
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 
+	/**This method maps Entity from a string containing JSON
+	 * @param json The string that contains JSON
+	 * @return Mapped Entity
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
 	protected Entity mapEntityFromJson(String json) throws JsonParseException, JsonMappingException, IOException {
 		return objectMapper.readValue(json, this.getClass());
 	}
 
+	/**This method serializes current entity to JSON format.
+	 * @param includeNulls A flag whether null values should be included in resulting JSON
+	 * @return Entity serialized to String
+	 * @throws JsonGenerationException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
 	public String mapToJson(boolean includeNulls) throws JsonGenerationException, JsonMappingException, IOException {
 		objectMapper.setSerializationInclusion(includeNulls ? Inclusion.ALWAYS : Inclusion.NON_NULL);
 		ObjectWriter ow = objectMapper.writer();
 		return ow.writeValueAsString(this);
 	}
 	
+	/**This method maps Entity from an XML
+	 * @param xml The XML to map Entity from
+	 * @return Mapped Entity
+	 * @throws JAXBException
+	 */
 	private Entity mapEntityFromXml(String xml) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -44,6 +63,10 @@ abstract public class Entity {
 		return (Entity) je1.getValue();
 	}
 
+	/**This method serializes current Entity to XML
+	 * @return Entity serialized to XML
+	 * @throws JAXBException
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public String mapToXml() throws JAXBException{
 		JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
@@ -60,6 +83,10 @@ abstract public class Entity {
 		}
 		return result;
 	}
+	/**This method deserializes an entity from XML or JSON
+	 * @param inputString XML or JSON containing the Entity
+	 * @return Mapped Entity
+	 */
 	public Entity mapEntity(String inputString) {
 		try {
 			try {

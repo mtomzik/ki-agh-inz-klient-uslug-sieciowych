@@ -1,5 +1,8 @@
 package pl.edu.agh.universallib.api.exception;
 
+/**
+ * This exception will be thrown only in ServerConnector class, when a problem with HttpUrlConnection occurs.
+ */
 public class ProcessingException extends Exception {
 
 	private static final long serialVersionUID = 6485576070780223078L;

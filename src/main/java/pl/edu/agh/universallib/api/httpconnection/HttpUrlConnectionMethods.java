@@ -8,8 +8,17 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 
+/**
+ *	Lowest level class in library, accessing the Webservice
+ */
 public class HttpUrlConnectionMethods {
 
+	/**This method fetches a single result (response)
+	 * 
+	 * @param address Complete address to webservice on which GET is to be performed
+	 * @return Response from Webservice
+	 * @throws IOException
+	 */
 	public static String getSingleData(String address) throws IOException {
 		HttpURLConnection conn = null;
 		conn = getConnectionToUrl(address);
@@ -19,7 +28,13 @@ public class HttpUrlConnectionMethods {
 		return response;
 	}
 
-	public static int postRecord(String address, String jsonString) throws IOException {
+	/**Method used to post record to webservice
+	 * @param address Complete address to webservice on which POST is to be performed
+	 * @param dataString String to be posted, either in JSON or XML format
+	 * @return Http response code
+	 * @throws IOException
+	 */
+	public static int postRecord(String address, String dataString) throws IOException {
 		HttpURLConnection conn = null;
 		DataOutputStream out = null;
 		try {
@@ -27,7 +42,7 @@ public class HttpUrlConnectionMethods {
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Content-Type", "application/json");
 			out = new DataOutputStream(conn.getOutputStream());
-			out.writeBytes(jsonString);
+			out.writeBytes(dataString);
 			out.flush();
 			return conn.getResponseCode();
 		} catch (ProtocolException e) {
@@ -43,6 +58,12 @@ public class HttpUrlConnectionMethods {
 		return -1;
 	}
 
+	/**Method to update current records
+	 * @param address Complete address to webservice on which PUT is to be performed
+	 * @param contentToPut Updated content, in JSON format
+	 * @return Http response code
+	 * @throws IOException
+	 */
 	public static int putRecord(String address, String contentToPut) throws IOException {
 		HttpURLConnection conn = null;
 		DataOutputStream out = null;
@@ -55,7 +76,6 @@ public class HttpUrlConnectionMethods {
 			out.writeBytes(contentToPut);
 			return conn.getResponseCode();
 		} catch (ProtocolException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			if (conn != null) {
@@ -68,6 +88,12 @@ public class HttpUrlConnectionMethods {
 		return -1;
 	}
 
+	/**
+	 * Method that deletes a record
+	 * 
+	 * @param address Complete address to webservice on which DELETE is to be performed
+	 * @return Http status code
+	 */
 	public static int deleteRecord(String address) {
 		HttpURLConnection conn = null;
 		try {
@@ -75,7 +101,6 @@ public class HttpUrlConnectionMethods {
 			conn.setRequestMethod("DELETE");
 			return conn.getResponseCode();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			if (conn != null) {
@@ -85,6 +110,11 @@ public class HttpUrlConnectionMethods {
 		return -1;
 	}
 
+	/**Method that gets connection to a given URL
+	 * @param address Address to the URL
+	 * @return Connection to the URL
+	 * @throws IOException
+	 */
 	private static HttpURLConnection getConnectionToUrl(String address)
 			throws IOException {
 		URL url = null;
@@ -94,6 +124,11 @@ public class HttpUrlConnectionMethods {
 		return httpCon;
 	}
 
+	/**This method fetches response from a given URL
+	 * @param conn connection to the URL
+	 * @return Response as String
+	 * @throws IOException
+	 */
 	private static String getResponse(HttpURLConnection conn)
 			throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(

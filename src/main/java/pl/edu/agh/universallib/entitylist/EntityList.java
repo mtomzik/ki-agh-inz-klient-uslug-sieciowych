@@ -52,6 +52,11 @@ public class EntityList extends Entity {
 		this.entities = entities;
 	}
 
+	/**This method maps multiple entites to a List<Entity>
+	 * @param inputString XML or JSON containing one or more entities
+	 * @return List of mapped Entities
+	 * @throws EntityException
+	 */
 	public List<Entity> mapEntities(String inputString) throws EntityException {
 		try {
 			if (inputString.charAt(0) == '<') {
@@ -75,12 +80,25 @@ public class EntityList extends Entity {
 		}
 	}
 
+	/**This method maps entities from JSON formats
+	 * @param inputString JSON to map multiple entites from
+	 * @return Mapped entities
+	 * @throws EntityException
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
 	private List<Entity> mapEntitiesFromJson(String inputString) throws EntityException, JsonParseException, JsonMappingException, IOException {
 		ObjectMapper objectMapper = new ObjectMapper();
 		TypeFactory typeFactory = objectMapper.getTypeFactory();
 		return new ObjectMapper().readValue(inputString, typeFactory.constructCollectionType(List.class, entityType.getClass()));
 	}
 
+	/**This method maps entities from XML 
+	 * @param inputString XML containing one or moe records with one parent node
+	 * @return Mapped entities
+	 * @throws EntityException
+	 */
 	private List<Entity> mapEntitiesFromXml(String inputString) throws EntityException {
 		List<Entity> entities = new ArrayList<Entity>();
 		try {
@@ -111,6 +129,11 @@ public class EntityList extends Entity {
 		return entities;
 	}
 
+	/**Method used in mapping mutiple entites from XML
+	 * @param node Node being mapped
+	 * @return Node as String
+	 * @throws TransformerException
+	 */
 	private static String nodeToString(Node node) throws TransformerException {
 		StringWriter buf = new StringWriter();
 		Transformer xform = TransformerFactory.newInstance().newTransformer();
