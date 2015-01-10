@@ -19,13 +19,15 @@ public class GetEntitiesTest {
 
 	@Before
 	public void prepareEntity() throws EntityMethodsException {
-		pm = new PodcastListMethods(
-				PropertiesLoader.getWebServiceAddress(),
-				WebServiceType.REST);
+		pm = new PodcastListMethods(PropertiesLoader.getWebServiceAddress(), WebServiceType.REST);
 		dataHandler = new PodcastDataHandler();
 		pm.deleteAll(dataHandler);
-		pm.create("{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\"}", dataHandler);
-		pm.create("{\"title\":\"Some2Title\",\"linkOnPodcastpedia\":\"http://google2.com\",\"feed\":\"http://googlee2.com\",\"description\":\"testDescription2\"}", dataHandler);
+		pm.create(
+				"{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\"}",
+				dataHandler);
+		pm.create(
+				"{\"title\":\"Some2Title\",\"linkOnPodcastpedia\":\"http://google2.com\",\"feed\":\"http://googlee2.com\",\"description\":\"testDescription2\"}",
+				dataHandler);
 		dataHandler = new PodcastDataHandler();
 	}
 
@@ -33,7 +35,6 @@ public class GetEntitiesTest {
 	public void getEntityTest() throws EntityMethodsException {
 		pm.getAll(dataHandler);
 		assertNull(dataHandler.getError());
-		assertTrue(dataHandler.getData().contains("\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\""));
-		assertTrue(dataHandler.getData().contains("\"title\":\"Some2Title\",\"linkOnPodcastpedia\":\"http://google2.com\",\"feed\":\"http://googlee2.com\",\"description\":\"testDescription2\""));
+		assertTrue(dataHandler.getResults().getEntities().size() == 2);
 	}
 }

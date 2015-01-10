@@ -1,6 +1,5 @@
 package pl.edu.agh.universallib.entitymethods;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Before;
@@ -19,9 +18,7 @@ public class DeleteEntityTest {
 
 	@Before
 	public void prepareEntity() throws EntityMethodsException {
-		pm = new PodcastListMethods(
-				PropertiesLoader.getWebServiceAddress(),
-				WebServiceType.REST);
+		pm = new PodcastListMethods(PropertiesLoader.getWebServiceAddress(), WebServiceType.REST);
 		dataHandler = new PodcastDataHandler();
 		pm.deleteAll(dataHandler);
 		pm.create(
@@ -31,13 +28,10 @@ public class DeleteEntityTest {
 	}
 
 	@Test
-	public void test() throws EntityMethodsException {
+	public void test() throws EntityMethodsException, InterruptedException {
 		pm.delete(1, dataHandler);
+		Thread.sleep(1000L);
 		assertNull(dataHandler.getError());
-		assertEquals("204", dataHandler.getData());
-		dataHandler = new PodcastDataHandler();
-		pm.get(1, dataHandler);
-		assertNull(dataHandler.getData());
 	}
 
 }
