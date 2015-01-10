@@ -1,6 +1,7 @@
-package pl.edu.agh.universallib.entity;
+package pl.edu.agh.universallib.api.handler;
 
 import pl.edu.agh.universallib.api.handler.WebServiceDataHandler;
+import pl.edu.agh.universallib.entity.Entity;
 import pl.edu.agh.universallib.entity.example.Podcast;
 import pl.edu.agh.universallib.entity.example.PodcastList;
 

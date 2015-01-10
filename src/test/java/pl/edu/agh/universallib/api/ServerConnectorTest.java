@@ -5,7 +5,11 @@ import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 
+import pl.edu.agh.universallib.api.exception.ProcessingException;
+import pl.edu.agh.universallib.api.handler.TestDataHandler;
 import pl.edu.agh.universallib.api.httpconnection.ConnectionType;
+import pl.edu.agh.universallib.api.mediator.WebServiceDataMediator;
+import pl.edu.agh.universallib.entity.example.Book;
 
 public class ServerConnectorTest {
 
@@ -13,18 +17,25 @@ public class ServerConnectorTest {
 
 	@Before
 	public void setupServerConnector() {
-		serverConnector = new ServerConnector(
-				"http://localhost:8888/springrestdemo-0.0.1-SNAPSHOT");
+		serverConnector = new ServerConnector("http://localhost:8888/springrestdemo-0.0.1-SNAPSHOT");
 	}
 
-	@Test
-	public void testProcess() {
+	@Test(expected = ProcessingException.class)
+	public void testProcessNonExistingUrl() throws Exception {
+		serverConnector = new ServerConnector("http://somenonexistingwebservice.com");
+		// given
 		ApiCall apiCall = new ApiCall();
 		apiCall.setCallDate(new Date());
 		apiCall.setConnectionType(ConnectionType.GET);
-		apiCall.setUrl("/podcasts/1");
-		serverConnector.process(apiCall, null);
-	//	assertFalse(serverConnector.getDataHandler(apiCall).getData().isEmpty());
+
+		TestDataHandler dataHandler = new TestDataHandler();
+		WebServiceDataMediator<Book> dataMediator = new WebServiceDataMediator<Book>(dataHandler, Book.class);
+
+		// do
+		serverConnector.process(apiCall, dataMediator);
+		Thread.sleep(1000L);
+
+		throw dataHandler.getException();
 	}
 
 }

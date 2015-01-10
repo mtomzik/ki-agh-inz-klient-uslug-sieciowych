@@ -26,8 +26,11 @@ abstract public class Entity {
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 
-	/**This method maps Entity from a string containing JSON
-	 * @param json The string that contains JSON
+	/**
+	 * This method maps Entity from a string containing JSON
+	 * 
+	 * @param json
+	 *            The string that contains JSON
 	 * @return Mapped Entity
 	 * @throws JsonParseException
 	 * @throws JsonMappingException
@@ -37,8 +40,12 @@ abstract public class Entity {
 		return objectMapper.readValue(json, this.getClass());
 	}
 
-	/**This method serializes current entity to JSON format.
-	 * @param includeNulls A flag whether null values should be included in resulting JSON
+	/**
+	 * This method serializes current entity to JSON format.
+	 * 
+	 * @param includeNulls
+	 *            A flag whether null values should be included in resulting
+	 *            JSON
 	 * @return Entity serialized to String
 	 * @throws JsonGenerationException
 	 * @throws JsonMappingException
@@ -49,13 +56,16 @@ abstract public class Entity {
 		ObjectWriter ow = objectMapper.writer();
 		return ow.writeValueAsString(this);
 	}
-	
-	/**This method maps Entity from an XML
-	 * @param xml The XML to map Entity from
+
+	/**
+	 * This method maps Entity from an XML
+	 * 
+	 * @param xml
+	 *            The XML to map Entity from
 	 * @return Mapped Entity
 	 * @throws JAXBException
 	 */
-	private Entity mapEntityFromXml(String xml) throws JAXBException {
+	protected Entity mapEntityFromXml(String xml) throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
 		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 		Source streamSource = new StreamSource(new StringReader(xml));
@@ -63,15 +73,17 @@ abstract public class Entity {
 		return (Entity) je1.getValue();
 	}
 
-	/**This method serializes current Entity to XML
+	/**
+	 * This method serializes current Entity to XML
+	 * 
 	 * @return Entity serialized to XML
 	 * @throws JAXBException
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public String mapToXml() throws JAXBException{
+	public String mapToXml() throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(this.getClass());
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-		
+
 		StringWriter writer = new StringWriter();
 		JAXBElement jaxbElement = new JAXBElement(new QName(this.getClass().getSimpleName()), this.getClass(), this);
 		jaxbMarshaller.marshal(jaxbElement, writer);
@@ -83,8 +95,12 @@ abstract public class Entity {
 		}
 		return result;
 	}
-	/**This method deserializes an entity from XML or JSON
-	 * @param inputString XML or JSON containing the Entity
+
+	/**
+	 * This method deserializes an entity from XML or JSON
+	 * 
+	 * @param inputString
+	 *            XML or JSON containing the Entity
 	 * @return Mapped Entity
 	 */
 	public Entity mapEntity(String inputString) {
@@ -111,6 +127,5 @@ abstract public class Entity {
 		}
 		return null;
 	}
-
 
 }

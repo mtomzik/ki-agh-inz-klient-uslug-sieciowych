@@ -9,18 +9,17 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.edu.agh.universallib.api.httpconnection.HttpUrlConnectionMethods;
+import pl.edu.agh.universallib.util.PropertiesLoader;
 
 public class HttpConnectionTest {
 
-	private static String WS_ADDRESS = "http://localhost:8888/springrestdemo-0.0.1-SNAPSHOT/podcasts";
+	private static final String WS_ADDRESS = PropertiesLoader.getWebServiceAddress() + "podcasts";
 
 	@Before
 	public void initializeData() throws IOException {
 		HttpUrlConnectionMethods.deleteRecord(WS_ADDRESS);
 		HttpUrlConnectionMethods
-				.postRecord(
-						WS_ADDRESS,
+				.postRecord(WS_ADDRESS,
 						"{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\"}");
 	}
 
