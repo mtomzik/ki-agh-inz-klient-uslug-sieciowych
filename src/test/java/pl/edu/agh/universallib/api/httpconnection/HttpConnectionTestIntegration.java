@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import pl.edu.agh.universallib.util.PropertiesLoader;
 
-public class HttpConnectionTest {
+public class HttpConnectionTestIntegration {
 
 	private static final String WS_ADDRESS = PropertiesLoader.getWebServiceAddress() + "podcasts";
 
