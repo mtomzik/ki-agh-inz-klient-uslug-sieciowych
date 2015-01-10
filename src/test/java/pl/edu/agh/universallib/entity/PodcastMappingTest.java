@@ -17,8 +17,6 @@ import pl.edu.agh.universallib.entity.exception.EntityMethodsException;
 
 public class PodcastMappingTest {
 
-	private static final String ENTITY_JSON = "{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\"}";
-
 	private Podcast podcastExpectedEntity;
 
 	@Before
@@ -38,7 +36,9 @@ public class PodcastMappingTest {
 
 	@Test
 	public void mapEntityWithoutNullsToJson() throws JsonGenerationException, JsonMappingException, IOException {
-		assertEquals(ENTITY_JSON, podcastExpectedEntity.mapToJson(false));
+		assertEquals(
+				"{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\"}",
+				podcastExpectedEntity.mapToJson(false));
 	}
 
 	@Test
@@ -63,11 +63,37 @@ public class PodcastMappingTest {
 	@Test
 	public void mapEntityFromJson() throws JsonParseException, JsonMappingException, IOException {
 		Podcast testPodcastEntity = new Podcast();
-		testPodcastEntity = (Podcast) testPodcastEntity.mapEntityFromJson(ENTITY_JSON);
+		testPodcastEntity = (Podcast) testPodcastEntity
+				.mapEntityFromJson("{\"title\":\"SomeTitle\",\"linkOnPodcastpedia\":\"http://google.com\",\"feed\":\"http://googlee.com\",\"description\":\"testDescription\"}");
 
 		assertEquals(podcastExpectedEntity.getTitle(), testPodcastEntity.getTitle());
 		assertEquals(podcastExpectedEntity.getLinkOnPodcastpedia(), testPodcastEntity.getLinkOnPodcastpedia());
 		assertEquals(podcastExpectedEntity.getFeed(), testPodcastEntity.getFeed());
 		assertEquals(podcastExpectedEntity.getDescription(), testPodcastEntity.getDescription());
+	}
+
+	@Test(expected = JAXBException.class)
+	public void mapEntityFromMalformedXml() throws JAXBException {
+		Podcast podcast = new Podcast();
+		podcast.mapEntityFromXml("This is not an xml");
+	}
+
+	@Test
+	public void mapEntityFromWrongFieldsXml() throws JAXBException {
+		Podcast podcast = new Podcast();
+		String entityAsXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Padcast><aescription>testDescription</aescription><aeed>http://googlee.com</aeed><ainkOnPodcastpedia>http://google.com</ainkOnPodcastpedia><aitle>SomeTitle</aitle></Padcast>";
+		podcast.mapEntityFromXml(entityAsXml);
+	}
+
+	@Test(expected = JsonParseException.class)
+	public void mapEntityFromMalformedJson() throws JsonMappingException, IOException {
+		Podcast podcast = new Podcast();
+		podcast.mapEntityFromJson("This is not a JSON string");
+	}
+
+	@Test(expected = JsonMappingException.class)
+	public void mapEntityFromWrongFieldsJson() throws JsonParseException, JsonMappingException, IOException {
+		Podcast podcast = new Podcast();
+		podcast.mapEntityFromJson("{\"aitle\":\"SomeTitle\",\"ainkOnPodcastpedia\":\"http://google.com\",\"fded\":\"http://googlee.com\",\"descrietion\":\"testDescription\"}");
 	}
 }
