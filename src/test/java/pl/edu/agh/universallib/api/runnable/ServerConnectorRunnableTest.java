@@ -12,6 +12,12 @@ public class ServerConnectorRunnableTest {
 		serverConnectorRunnable = new ServerConnectorRunnable(null, null, null);
 	}
 
+	@Test(expected = NullPointerException.class)
+	public void testNullServerConnector() {
+		serverConnectorRunnable = new ServerConnectorRunnable(null, null, null);
+		serverConnectorRunnable.run();
+	}
+
 	@Test
 	public void testRun() {
 		// TODO: mock
