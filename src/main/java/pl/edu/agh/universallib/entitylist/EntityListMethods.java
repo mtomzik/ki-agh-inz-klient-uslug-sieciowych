@@ -12,16 +12,17 @@ public class EntityListMethods<T extends EntityList> extends EntityMethods<T> {
 
 	private int pageLength;
 	private boolean paginated;
-	
+
 	private String currentIndexUrlPart;
 	private String pageLengthUrlPart;
-	
+
 	public EntityListMethods(Class<T> cls, String webServiceUrl, WebServiceType webServiceType) {
 		super(cls, webServiceUrl, webServiceType, 1);
 		this.paginated = false;
 	}
 
-	public EntityListMethods(Class<T> cls, String webServiceUrl, WebServiceType webServiceType, String currIndexUrlPart, String pageLengthUrlPart, int nThreads) {
+	public EntityListMethods(Class<T> cls, String webServiceUrl, WebServiceType webServiceType, String currIndexUrlPart, String pageLengthUrlPart,
+			int nThreads) {
 		super(cls, webServiceUrl, webServiceType, nThreads);
 		this.paginated = true;
 		this.currentIndex = 0;
@@ -29,7 +30,7 @@ public class EntityListMethods<T extends EntityList> extends EntityMethods<T> {
 		this.currentIndexUrlPart = currIndexUrlPart;
 		this.pageLengthUrlPart = pageLengthUrlPart;
 	}
-	
+
 	public EntityListMethods(Class<T> cls, String webServiceUrl, WebServiceType webServiceType, String currIndexUrlPart, String pageLengthUrlPart) {
 		super(cls, webServiceUrl, webServiceType, 1);
 		this.paginated = true;
@@ -59,8 +60,12 @@ public class EntityListMethods<T extends EntityList> extends EntityMethods<T> {
 		return paginated;
 	}
 
-	/**This method fetches all records from Webservice
-	 * @param dataHandler dataHandler that will be called when a response is received or an exception occurs
+	/**
+	 * This method fetches all records from Webservice
+	 * 
+	 * @param dataHandler
+	 *            dataHandler that will be called when a response is received or
+	 *            an exception occurs
 	 * @throws EntityMethodsException
 	 */
 	public void getAll(WebServiceDataHandler dataHandler) throws EntityMethodsException {
@@ -68,14 +73,19 @@ public class EntityListMethods<T extends EntityList> extends EntityMethods<T> {
 		processApiCall(apiCall, dataHandler);
 	}
 
-	/**This method fetches all records from current page and increments current position
-	 * @param dataHandler dataHandler that will be called when a response is received or an exception occurs
+	/**
+	 * This method fetches all records from current page and increments current
+	 * position
+	 * 
+	 * @param dataHandler
+	 *            dataHandler that will be called when a response is received or
+	 *            an exception occurs
 	 * @throws EntityMethodsException
 	 */
 	public void getPage(WebServiceDataHandler dataHandler) throws EntityMethodsException {
 		ApiCall apiCall = prepareApiCall(getUrlPart(), ConnectionType.GET, null, null);
 		String currentUrl = apiCall.getUrl();
-		if (currentUrl.charAt(currentUrl.length() - 1) == '/'){
+		if (currentUrl.charAt(currentUrl.length() - 1) == '/') {
 			currentUrl = currentUrl.substring(0, currentUrl.length() - 1);
 		}
 		String urlToSet = currentUrl + "?" + currentIndexUrlPart + "=" + currentIndex + "&" + pageLengthUrlPart + "=" + pageLength;
@@ -84,8 +94,12 @@ public class EntityListMethods<T extends EntityList> extends EntityMethods<T> {
 		currentIndex += pageLength;
 	}
 
-	/**This method deletes all records
-	 * @param dataHandler dataHandler that will be called when a response is received or an exception occurs
+	/**
+	 * This method deletes all records
+	 * 
+	 * @param dataHandler
+	 *            dataHandler that will be called when a response is received or
+	 *            an exception occurs
 	 * @throws EntityMethodsException
 	 */
 	public void deleteAll(WebServiceDataHandler dataHandler) throws EntityMethodsException {
